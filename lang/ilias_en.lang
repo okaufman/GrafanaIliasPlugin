@@ -7,9 +7,5 @@ button_save#:#Save
 button_cancel#:#Cancel
 cron_crnhk_tcron_msg_successfully_saved#:#Successfully saved
 cron_crnhk_tcron_tab_plugin_config#:#Basic Settings
-expiration_threshold#:#Expiration Threshold (in minutes) after which an anonymous user will be deleted
-expiration_info#:#Default is set to 240 minutes.
 msg_successfully_saved#:#The expiration value has successfully been updated.
 msg_failed_save#:#The expiration value has not been saved.
-msg_not_valid_expiration_input#:#Your input is not valid. Please enter a positive integer.
-tab_plugin_config#:#Expiration Config
