@@ -59,7 +59,7 @@ class GrafanaDBAccess implements GrafanaDBInterface
         $sql = "DROP TABLE " . ilGrafanaPlugin::TABLE_NAME;
         $this->db->query($sql);
 
-        $sql = "DROP TABLE " . ilGrafanaPlugin::LOG_TABLE;
+        $sql = "DROP TABLE " . ilGrafanaPlugin::SES_LOG_TABLE;
         $this->db->query($sql);
     }
 
@@ -71,9 +71,9 @@ class GrafanaDBAccess implements GrafanaDBInterface
             'timestamp'                => array('integer', $timestamp),
             'date'                     => array('datetime', date('Y-m-d H:i:s', $timestamp)),
             'all_remaining_sessions'   => array('integer', $this->getAllSessions()),
-            'active_during_last_5min'  => array('integer', $this->getSessionsBetween($timestamp - 300, $timestamp)),
-            'active_during_last_15min' => array('integer', $this->getSessionsBetween($timestamp - 900, $timestamp)),
-            'active_during_last_hour'  => array('integer', $hour1 = $this->getSessionsBetween($timestamp - 3600, $timestamp))
+            'active_during_last_5min'  => array('integer', $this->getUsersActiveBetween($timestamp - 300, $timestamp)),
+            'active_during_last_15min' => array('integer', $this->getUsersActiveBetween($timestamp - 900, $timestamp)),
+            'active_during_last_hour'  => array('integer', $this->getUsersActiveBetween($timestamp - 3600, $timestamp))
         ));
     }
 
@@ -94,19 +94,12 @@ class GrafanaDBAccess implements GrafanaDBInterface
      * @param $timeLate
      * @return mixed
      */
-    public function getSessionsBetween($timeEarly, $timeLate)
+    public function getUsersActiveBetween($timeEarly, $timeLate)
     {
-        $sql   = "SELECT count(*) from usr_session where ctime Between '" . $timeEarly . "'and '" . $timeLate . "'";
+        $sql   = "SELECT count(distinct usr_session.user_id) from usr_session where ctime Between '" . $timeEarly . "'and '" . $timeLate . "'";
         $query = $this->db->query($sql);
         $rec   = $this->db->fetchAssoc($query);
-        return $rec['count(*)'];
-    }
-
-    public function getAllUsersWithActiveSession(){
-        $sql = "SELECT count(distinct usr_session.user_id) from usr_session where FROM_UNIXTIME(expires)  > (now() + INTERVAL 11 HOUR)";
-        $query = $this->db->query($sql);
-        $rec   = $this->db->fetchAssoc($query);
-        return $rec['count(distinct user_id)'];
+        return $rec['count(distinct usr_session.user_id)'];
     }
 
 }

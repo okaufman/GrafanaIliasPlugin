@@ -28,5 +28,5 @@ interface GrafanaDBInterface
      * @param $timeLate
      * @return mixed
      */
-    public function getSessionsBetween($timeEarly, $timeLate);
+    public function getUsersActiveBetween($timeEarly, $timeLate);
 }
