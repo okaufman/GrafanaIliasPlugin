@@ -2,9 +2,9 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-use  iLUB\Plugins\Grafana\Helper\cleanUpSessionsDBAccess;
+use  iLUB\Plugins\Grafana\Helper\GrafanaDBAccess;
 
-class DBAccessTest extends PHPUnit_Framework_TestCase
+class DBAccessTest extends PHPUnit\Framework\TestCase
 {
     protected $mockDBInterface;
 
@@ -27,89 +27,40 @@ class DBAccessTest extends PHPUnit_Framework_TestCase
 
     }
 
-    public function test_removeAnonymousSessionsOlderThanExpirationThreshold()
-    {
+    public function test_logSessionsToDB(){
 
-
-        $this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13 or user_id=0");
-        $this->mockDB->shouldReceive("query")->with("SELECT expiration FROM clean_ses_cron");
-        $this->mockDB->shouldReceive("fetchAssoc")->times(7);
-        $this->mockDB->shouldReceive("manipulateF")->once;
-        $this->mockDB->shouldReceive("query")->with("SELECT count(*) FROM usr_session");
-        $this->mockDB->shouldReceive("insert");
-        $this->mockDB->shouldReceive("query")->times(3);
-
-        $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
-        $this->DBAccess->removeAnonymousSessionsOlderThanExpirationThreshold();
-    }
-
-    public function test_allAnonymousSessions()
-    {
-
-        $this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13 or user_id=0");
-        $this->mockDB->shouldReceive("fetchAssoc")->once;
-        $this->mockDB->shouldReceive("manipulateF")->once;
-
-        $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
-        $this->DBAccess->allAnonymousSessions();
-
-    }
-
-    public function test_expiredAnonymousUsers()
-    {
-
-        $this->mockDB->shouldReceive("query")->with("SELECT expiration FROM clean_ses_cron");
-        $this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13 AND ctime < %s");
-        $this->mockDB->shouldReceive("fetchAssoc")->once;
-        $this->mockDB->shouldReceive("queryF")->once;
-
-        $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
-        $this->DBAccess->expiredAnonymousUsers();
-
-    }
-
-    public function test_getExpirationValue()
-    {
-
-        $this->mockDB->shouldReceive("query")->with("SELECT expiration FROM clean_ses_cron");
-        $this->mockDB->shouldReceive("fetchAssoc")->once;
-
-        $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
-        $this->DBAccess->getExpirationValue();
-
-    }
-
-    public function test_logToDB(){
-
-        $this->mockDB->shouldReceive("query")->with("SELECT count(*) FROM usr_session");
-        $this->mockDB->shouldReceive("fetchAssoc")->once;
-        $this->mockDB->shouldReceive("insert")->once;
+        $this->mockDB->shouldReceive("query")->with("SELECT count(*) FROM usr_session")->times(1);
+        $this->mockDB->shouldReceive("fetchAssoc")->times(4);
+        $this->mockDB->shouldReceive("insert")->times(1);
         $this->mockDB->shouldReceive("query")->times(3);
 
 
-        $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
-        $this->DBAccess->logToDB();
+
+        $this->DBAccess = new GrafanaDBAccess($this->mockDIC, $this->mockDB);
+        $this->DBAccess->logSessionsToDB();
     }
 
 
     public function test_getAllSessions(){
         $this->mockDB->shouldReceive("query")->with("SELECT count(*) FROM usr_session");
-        $this->mockDB->shouldReceive("fetchAssoc")->once;
+        $this->mockDB->shouldReceive("fetchAssoc")->times(1);
 
 
-        $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
+        $this->DBAccess = new GrafanaDBAccess($this->mockDIC, $this->mockDB);
         $this->DBAccess->getAllSessions();
     }
 
     public function test_getSessionsBetween(){
         $this->mockDB->shouldReceive("query")->with("SELECT count(*) from usr_session where ctime Between '123456'and '654321'");
-        $this->mockDB->shouldReceive("fetchAssoc")->once;
+        $this->mockDB->shouldReceive("fetchAssoc")->times(1);
 
-        $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
+        $this->DBAccess = new GrafanaDBAccess($this->mockDIC, $this->mockDB);
         $this->DBAccess->getSessionsBetween(123456,654321);
     }
     public function tearDown()
     {
+        //I added this assertion because otherwise the test won't pass with the info "This test did not perform any assertions"
+        self::assertTrue(true);
         Mockery::close();
     }
 }

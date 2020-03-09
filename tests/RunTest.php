@@ -4,7 +4,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 use iLUB\Plugins\Grafana\Jobs\RunSync;
 
-class RunTest extends PHPUnit_Framework_TestCase
+class RunTest extends PHPUnit\Framework\TestCase
 {
 
     protected $mockCronJobResult;
@@ -14,7 +14,7 @@ class RunTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
 
-        $this->mockDBAccess      = Mockery::mock(iLUB\Plugins\Grafana\Helper\cleanUpSessionsDBAccess::class);
+        $this->mockDBAccess      = Mockery::mock(iLUB\Plugins\Grafana\Helper\GrafanaDBAccess::class);
         $this->mockCronJobResult = Mockery::mock(\ilCronJobResult::class);
         $this->RunSync           = new RunSync($this->mockCronJobResult, $this->mockDBAccess);
     }
@@ -36,7 +36,7 @@ class RunTest extends PHPUnit_Framework_TestCase
     public function test_run()
     {
         //Expectations
-        $this->mockDBAccess->shouldReceive("removeAnonymousSessionsOlderThanExpirationThreshold")->once();
+        $this->mockDBAccess->shouldReceive("logsessionsToDB")->once();
         $this->mockCronJobResult->shouldReceive("setStatus")->with($this->mockCronJobResult::STATUS_OK);
         $this->mockCronJobResult->shouldReceive("setMessage")->with("Everything worked fine.");
 
