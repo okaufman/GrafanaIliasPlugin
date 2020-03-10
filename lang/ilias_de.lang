@@ -1,0 +1,11 @@
+admin_form_button_cancel#:#Abbrechen
+admin_form_button_save#:#Speichern
+admin_form_title#:#Allgemein
+first_variable#:#Erste(s)
+second_variable#:#Zweite(s)
+button_save#:#Speichern
+button_cancel#:#Abbrechen
+cron_crnhk_tcron_msg_successfully_saved#:#Erfolgreich gespeichert
+cron_crnhk_tcron_tab_plugin_config#:#Grundeinstellung
+msg_successfully_saved#:#Der Wert wurde erfolgreich aktualisiert
+msg_failed_save#:#Der Wert wurde nicht gespeichert
