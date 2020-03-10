@@ -5,16 +5,14 @@ namespace iLUB\Plugins\Grafana\Jobs;
 use Exception;
 use ilCronJob;
 use iLUB\Plugins\Grafana\Helper\GrafanaDBAccess;
-use ilGrafanaPlugin;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+
 
 /**
  * Class RunSync
  * This class has to run the Cron Job
  * @package iLUB\Plugins\Grafana\Jobs
  */
-class RunSync extends AbstractJob
+class RunSync extends ilCronJob
 {
 
     /**
