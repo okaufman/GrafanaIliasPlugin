@@ -1,6 +1,7 @@
-### Description Grafana Plugin
+# Description Grafana Plugin
 This ILIAS-Plugin is supposed to be used together with a Grafana Instance.
 It  will create Database-Tables that will be used to display important stats of the ILIAS Installation in Grafana.
+
 ## Installation
 
 ### Install Grafana plugin
@@ -22,6 +23,8 @@ If you run composer from vagrant box, remember to run it as user `www-data`.
 ```
 sudo -u www-data composer install
 ```
+
+## Cron Jobs
 
 ### Activate Cron Jobs
 This is a Cron Plugin so in order for it to work Cron-jobs need to be activated. This can be done in the folder /etc/cron.d

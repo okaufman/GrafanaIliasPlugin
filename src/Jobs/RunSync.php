@@ -4,7 +4,7 @@ namespace iLUB\Plugins\Grafana\Jobs;
 
 use Exception;
 use ilCronJob;
-use iLUB\Plugins\Grafana\Helper\grafanaDBAccess;
+use iLUB\Plugins\Grafana\Helper\GrafanaDBAccess;
 use ilGrafanaPlugin;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -33,15 +33,20 @@ class RunSync extends AbstractJob
      * @param \ilCronJobResult|null $dic_param
      * Dieses wird ausgeführt, wenn im GUI die Cron-Jobs angezeigt werden.
      */
-    public function __construct(\ilCronJobResult $job_result = null, grafanaDBAccess $db_access = null)
+    public function __construct(\ilCronJobResult $job_result = null, GrafanaDBAccess $db_access = null, $dic_param=null)
     {
         $this->job_result = $job_result;
         if ($this->job_result == null) {
             $this->job_result = new \ilCronJobResult();
         }
+        $this->dic = $dic_param;
+        if ($this->dic==null) {
+            global $DIC;
+            $this->dic = $DIC;
+        }
         $this->db_access = $db_access;
         if ($this->db_access == null) {
-            $this->db_access = new grafanaDBAccess();
+            $this->db_access = new grafanaDBAccess($this->dic);
         }
     }
 

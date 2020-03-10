@@ -26,7 +26,7 @@ class ilGrafanaPlugin extends ilCronHookPlugin
     /**
      * @var $this ->access
      */
-    protected $access;
+    protected $db_access;
 
     /**
      * @return string
@@ -61,10 +61,9 @@ class ilGrafanaPlugin extends ilCronHookPlugin
      * @param string $a_job_id
      * @return ilCronJob
      */
-    public function getCronJobInstance($a_job_id) : ilCronJob
+    public function getCronJobInstance($runSync) : ilCronJob
     {
-        $a_job_id = "\iLUB\Plugins\Grafana\Jobs\RunSync";
-        return new $a_job_id();
+        return  new RunSync();
     }
 
     /**
@@ -72,8 +71,8 @@ class ilGrafanaPlugin extends ilCronHookPlugin
      */
     protected function afterUninstall()
     {
-        $this->access = new GrafanaDBAccess();
-        $this->access->removePluginTableFromDB();
+        $this->db_access = new GrafanaDBAccess();
+        $this->db_access->removePluginTableFromDB();
     }
 
 }

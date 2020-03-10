@@ -17,8 +17,6 @@ class GrafanaDBAccess implements GrafanaDBInterface
      */
     protected $db;
 
-    protected $deleted_anons;
-    protected $remaining_anons;
     protected $all_remaining_sessions;
 
 
